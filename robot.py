@@ -9,14 +9,17 @@ class Robot(wpilib.TimedRobot):
     def robotInit(self):
         self.container.robotInit()
 
+
     def autonomousInit(self):
         self.container.autonomousInit()
+        self.container.swerve.zero_modules_to_absolute()
 
     def autonomousPeriodic(self):
         self.container.autonomousPeriodic()
 
     def teleopInit(self):
         self.container.teleopInit()
+        self.container.swerve.zero_modules_to_absolute()
 
     def teleopPeriodic(self):
         x = self.getJoystickAxis(wpilib.XboxController.Axis.kLeftX)
