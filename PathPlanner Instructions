@@ -1,0 +1,9 @@
+download pathplanner from https://pathplanner.dev.download
+select team number and current field
+save paths into this folder 
+
+Then once all that jazz is done run the command 
+
+"pip install robotpy-pathplannerlib"
+
+Then the path planner code can be uncommented and used

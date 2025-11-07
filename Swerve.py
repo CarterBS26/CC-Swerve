@@ -51,9 +51,22 @@ class SwerveModule:
         self.drive_motor = wpilib.SparkMax(1, 3, 5, 8[module_number], wpilib.MotorType.kBrushless)
         self.steer_motor = wpilib.SparkMax(2, 4, 6, 9[module_number], wpilib.MotorType.kBrushless)
         self.encoder = wpilib.Encoder(16, 17, 18, 19)
+        self.encoder_offset = abs.encoder_offset
         self.location = (0.28, 0.28) #meters from center of robot x,y
         self.last_angle = rotation2d()
         self.gyro = phoenix6.Pigeon2
+        self.current_angle = 0.0
+        self.name = __name__
+
+    def get_absolute_pos(self):
+        position = self.encoder.getAbsolutePosition()
+        angle = (position - self.encoder_offset) * 2 * math.pi
+        return angle
+    def reset_to_absolute(self):
+        """set the turning motor's encoder to match the absolute encoder"""
+        absolute_angle = self.get_absolute_pos()
+        self.turning_motor.setSelectedSensorPosition(absolute_angle)
+        print(f"[{self.name}] zeroed to {math.degrees(absolute_angle):.2f}°")
 
     def get_drive_velocity(self):
         rotations_per_sec = self.drive_motor.get_velocity().value
@@ -182,6 +195,11 @@ class SwerveSubsystem(subsystembase):
             self.get_module_positions(),
             pose2d()
         )
+    def zero_modules_to_absolute(self):
+        self.front_left.reset_to_absolute()
+        self.front_right.reset_to_absolute()
+        self.back_left.reset_to_absolute()
+        self.back_right.reset_to_absolute()
 
         #pigeon and odometer together = bueno
     def get_heading(self) -> rotation2d:
